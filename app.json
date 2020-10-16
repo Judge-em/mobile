@@ -31,6 +31,10 @@
         "tsx",
         "vue"
       ]
+    },
+    "description": "",
+    "android": {
+      "package": "test.test"
     }
   }
 }
