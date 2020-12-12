@@ -45,6 +45,17 @@ export default {
 		};
 	},
 	mounted() {},
+	computed: {
+		token() {
+			return store.state.token;
+		},
+	},
+	watch: {
+		token(newVal) {
+			console.log({ newVal });
+			if (newVal !== null) this.navigation.navigate("Home");
+		},
+	},
 	methods: {
 		loginAsGuest() {
 			if (store.dispatch("LOGIN")) this.navigation.navigate("Home");

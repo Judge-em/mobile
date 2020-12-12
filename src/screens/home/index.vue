@@ -2,37 +2,48 @@
 	<nb-container>
 		<status-bar :barStyle="'light-content'"></status-bar>
 		<image-background :source="launchScreenBg" class="imageContainer">
-			<nb-card class="mb-15">
-				<nb-card-item bordered>
-					<nb-left>
-						<nb-body>
-							<nb-text>LOG IN TO JUDGE'EM</nb-text>
-						</nb-body>
-					</nb-left>
-				</nb-card-item>
-
-				<nb-card-item>
+			<nb-container v-if="loaded" :style="{ backgroundColor: '#fff' }">
+				<nb-header>
 					<nb-body>
-						<nb-button block :style="{ margin: 15, marginTop: 10 }">
-							<nb-text>Log in as Guest</nb-text>
-						</nb-button>
-						<nb-button
-							:style="stylesObj.btnContainer"
-							:onPress="handleLetGoBtnPress"
-						>
-							<nb-text> Lets Go!</nb-text>
-						</nb-button>
+						<nb-title> JOIN TO ROOM </nb-title>
 					</nb-body>
-				</nb-card-item>
-			</nb-card>
+				</nb-header>
+				<nb-content padder>
+					<nb-form>
+						<nb-item>
+							<nb-input
+								placeholder="Code"
+								v-model="code"
+								auto-capitalize="none"
+							/>
+						</nb-item>
+						<nb-item last>
+							<nb-input
+								placeholder="Nickname"
+								v-model="nickname"
+								auto-capitalize="none"
+								secure-text-entry
+							/>
+						</nb-item>
+					</nb-form>
+					<view :style="{ marginTop: 10 }">
+						<nb-button block :on-press="join">
+							<nb-spinner v-if="logging_in" size="small" />
+							<nb-text>Join </nb-text>
+						</nb-button>
+					</view>
+				</nb-content>
+			</nb-container>
+			<nb-spinner v-if="!loaded"></nb-spinner>
 		</image-background>
 	</nb-container>
 </template>
 
 <script>
-import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 import { Dimensions, Platform } from "react-native";
 import launchScreenBg from "../../../assets/launchscreen-bg.png";
+import { Toast } from "native-base";
+import store from "../../store";
 import launchscreenLogo from "../../../assets/logo-kitchen-sink.png";
 import axios from "axios";
 
@@ -40,6 +51,14 @@ export default {
 	props: {
 		navigation: {
 			type: Object,
+		},
+		nickname: "",
+		code: "",
+		loaded: false,
+	},
+	computed: {
+		logging_in() {
+			return store.state.logging_in;
 		},
 	},
 	data() {
@@ -50,19 +69,18 @@ export default {
 				logoContainerStyle: {
 					marginTop: Dimensions.get("window").height / 8,
 				},
-				logoStyle: {
-					left: Platform.OS === "android" ? 40 : 50,
-					top: Platform.OS === "android" ? 35 : 60,
-				},
 				btnContainer: {
 					backgroundColor: "#6faf98",
 					alignSelf: "center",
 				},
 			},
-			somevar: "",
 		};
 	},
+	created() {
+		store.dispatch("START_CONNECTION");
+	},
 	mounted() {
+		this.loaded = true;
 		// let test = "";
 		// axios
 		// 	.post("https://judge-em-api.herokuapp.com/api/login/guest")
@@ -91,8 +109,13 @@ export default {
 		// start();
 	},
 	methods: {
-		handleLetGoBtnPress() {
-			this.navigation.openDrawer();
+		join() {
+			if (this.code && this.nickname) {
+				store.dispatch("JOIN_TO_ROOM", {
+					code: this.code,
+					nickname: this.nickname,
+				});
+			}
 		},
 	},
 };

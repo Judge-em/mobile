@@ -12,6 +12,7 @@ const store = new Vuex.Store({
 	state: {
 		token: null,
 		logging_in: false,
+		connection: null,
 	},
 });
 

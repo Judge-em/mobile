@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import store from "./store";
 import {
 	createAppContainer,
 	createStackNavigator,
@@ -174,7 +175,7 @@ const Drawer = createDrawerNavigator(
 		NHTypography: { screen: TypographyScreen },
 	},
 	{
-		initialRouteName: "Home",
+		initialRouteName: "Login",
 		contentOptions: {
 			activeTintColor: "#e91e63",
 		},
@@ -299,6 +300,9 @@ const AppNavigation = createAppContainer(
 	),
 );
 export default {
+	created() {
+		store.dispatch("RESTORE_SESSION");
+	},
 	components: { Root, AppNavigation },
 };
 </script>

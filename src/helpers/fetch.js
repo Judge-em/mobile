@@ -23,7 +23,3 @@ export async function send(method, path, data, params) {
 	console.log(response.data);
 	return response.data;
 }
-
-export function fetchPosts(type) {
-	return `${type}`;
-}
