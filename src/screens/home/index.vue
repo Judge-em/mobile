@@ -10,25 +10,23 @@
 				</nb-header>
 				<nb-content padder>
 					<nb-form>
-						<nb-item>
+						<nb-item :error="!valid">
 							<nb-input
 								placeholder="Code"
 								v-model="code"
 								auto-capitalize="none"
 							/>
 						</nb-item>
-						<nb-item last>
+						<nb-item :error="!valid">
 							<nb-input
 								placeholder="Nickname"
 								v-model="nickname"
 								auto-capitalize="none"
-								secure-text-entry
 							/>
 						</nb-item>
 					</nb-form>
 					<view :style="{ marginTop: 10 }">
 						<nb-button block :on-press="join">
-							<nb-spinner v-if="logging_in" size="small" />
 							<nb-text>Join </nb-text>
 						</nb-button>
 					</view>
@@ -45,15 +43,13 @@ import launchScreenBg from "../../../assets/launchscreen-bg.png";
 import { Toast } from "native-base";
 import store from "../../store";
 import launchscreenLogo from "../../../assets/logo-kitchen-sink.png";
-import axios from "axios";
 
 export default {
 	props: {
 		navigation: {
 			type: Object,
 		},
-		nickname: "",
-		code: "",
+
 		loaded: false,
 	},
 	computed: {
@@ -74,46 +70,39 @@ export default {
 					alignSelf: "center",
 				},
 			},
+			nickname: "",
+			code: "",
+			valid: true,
 		};
 	},
 	created() {
 		store.dispatch("START_CONNECTION");
 	},
 	mounted() {
+		this.valid = true;
 		this.loaded = true;
-		// let test = "";
-		// axios
-		// 	.post("https://judge-em-api.herokuapp.com/api/login/guest")
-		// 	.then((response) => {
-		// 		test = response.data.token;
-		// 		console.log(response.data);
-		// 	});
-		// console.log(test);
-		// const connection = new HubConnectionBuilder()
-		// 	.withUrl(`https://judge-em-api.herokuapp.com/hubs/game`, {
-		// 		accessTokenFactory: () => test,
-		// 	})
-		// 	.configureLogging(LogLevel.Information)
-		// 	.build();
-		// let startedPromise = null;
-		// function start() {
-		// 	startedPromise = connection.start().catch((err) => {
-		// 		console.error("Failed to connect with hub", err);
-		// 		return new Promise((resolve, reject) =>
-		// 			setTimeout(() => start().then(resolve).catch(reject), 5000),
-		// 		);
-		// 	});
-		// 	return startedPromise;
-		// }
-		// connection.onclose(() => start());
-		// start();
 	},
 	methods: {
 		join() {
+			// this.valid = true;
+			console.log(this.valid);
 			if (this.code && this.nickname) {
 				store.dispatch("JOIN_TO_ROOM", {
 					code: this.code,
 					nickname: this.nickname,
+				});
+				store.dispatch("SET_GAME_CONFIG", {
+					code: this.code,
+					nickname: this.nickname,
+					lastItemId: null,
+				});
+				this.navigation.navigate("Lobby");
+			} else {
+				this.valid = false;
+				Toast.show({
+					text: "Form filled out incorrectly",
+					type: "danger",
+					duration: 3000,
 				});
 			}
 		},

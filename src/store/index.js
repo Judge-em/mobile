@@ -13,6 +13,18 @@ const store = new Vuex.Store({
 		token: null,
 		logging_in: false,
 		connection: null,
+		master: null,
+		user: null,
+		lastGameConfig: {
+			code: "",
+			nickname: "",
+			lastItemId: null,
+		},
+		categories: [],
+		items: [],
+		lobby: [],
+		votingProgress: { max: null, progress: null },
+		summary: {},
 	},
 });
 

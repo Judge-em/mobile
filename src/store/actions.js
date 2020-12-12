@@ -4,6 +4,12 @@ import { AsyncStorage } from "react-native";
 import { send } from "../helpers/fetch";
 import messageType from "../helpers/messageType";
 
+export function SET_SESSION({ commit }, token) {
+	commit("LOGIN_SUCCESFULL", token);
+	AsyncStorage.setItem("token", token);
+	return true;
+}
+
 export function RESTORE_SESSION({ commit, dispatch }) {
 	AsyncStorage.getItem("token").then((val) => {
 		if (val) {
@@ -12,14 +18,21 @@ export function RESTORE_SESSION({ commit, dispatch }) {
 	});
 }
 
-export async function SET_SESSION({ commit }, token) {
-	commit("LOGIN_SUCCESFULL", token);
-	AsyncStorage.setItem("token", token);
-	return true;
+export function DESTROY_SESSION({ commit, dispatch }) {
+	AsyncStorage.removeItem("token").then(() => {
+		dispatch("SET_SESSION", null);
+	});
+}
+
+export function SET_GAME_CONFIG({ commit }, config) {
+	commit("SET_GAME_CONFIG", config);
+}
+
+export function SET_LAST_ITEM_ID({ commit }, id) {
+	commit("SET_LAST_ITEM_ID", id);
 }
 
 export async function LOGIN({ commit, dispatch }) {
-	commit("LOGGING_IN", true);
 	const { token } = await send("POST", "login/guest");
 	if (token) {
 		dispatch("SET_SESSION", token);
@@ -38,12 +51,12 @@ export async function START_CONNECTION({ commit, state }) {
 	connection.on("RefreshCurrentItemId", (itemId) => {
 		commit("SET_CURRENT_ITEM", itemId);
 	});
-	// connection.on("RefreshItemList", (items) => {
-	// 	gameHub.$emit("items-received", items);
-	// });
-	// connection.on("RefreshVotingProgress", (voteCounter, maxVotes) => {
-	// 	gameHub.$emit("voting-progress-received", voteCounter, maxVotes);
-	// });
+	connection.on("RefreshItemList", (items) => {
+		commit("SET_ITEMS", items);
+	});
+	connection.on("RefreshVotingProgress", (voteCounter, maxVotes) => {
+		commit("SET_VOTING_PROGRESS", { progress: voteCounter, max: maxVotes });
+	});
 	connection.on("SendMessage", (content, type) => {
 		Toast.show({
 			text: content,
@@ -52,30 +65,28 @@ export async function START_CONNECTION({ commit, state }) {
 		});
 		console.log({ content, type });
 	});
-	// connection.on("DisbandGame", (messsage) => {
-	// 	console.log(messsage);
-	// });
-	// connection.on("ShowSummary", (summary) => {
-	// 	gameHub.$emit("summary-received", summary);
-	// });
-	// connection.on("RefreshCategories", (category) => {
-	// 	gameHub.$emit("categories-received", category);
-	// });
-	// connection.on("SendPlayerProfileId", (profileId) => {
-	// 	gameHub.$emit("profile-received", profileId);
-	// });
 
-	// connection.on("RefreshPlayersList", (playerList) => {
-	// 	gameHub.$emit("player-list-received", playerList);
-	// });
+	connection.on("ShowSummary", (summary) => {
+		commit("SET_SUMMARY", summary);
+	});
+	connection.on("RefreshCategories", (categories) => {
+		commit("SET_CATEGORIES", categories);
+	});
+	connection.on("SendPlayerProfileId", (profileId) => {
+		commit("SET_PROFILE_ID", profileId);
+	});
 
-	// connection.on("AllowGameControl", (masterId) => {
-	// 	gameHub.$emit("master-id-received", masterId);
-	// });
+	connection.on("RefreshPlayersList", (playerList) => {
+		commit("SET_USERS_IN_LOBBY", playerList);
+	});
 
-	// connection.on("RequestCurrentItemId", (gameCode) => {
-	// 	gameHub.$emit("master-requested", gameCode);
-	// });
+	connection.on("AllowGameControl", (masterId) => {
+		commit("SET_GAME_MASTER", masterId);
+	});
+
+	connection.on("RequestCurrentItemId", (gameCode) => {
+		console.log("notImplemented");
+	});
 
 	commit("SET_CONNECTION", connection);
 
@@ -98,9 +109,15 @@ export function JOIN_TO_ROOM({ commit, state }, { code, nickname }) {
 	state.connection.invoke("ConnectToGame", code.toUpperCase(), nickname);
 }
 
+export function END_GAME({ state, commit }) {
+	console.log("22222", state.lastGameConfig);
+	state.connection.invoke("DisconnectFromGame", state.lastGameConfig.code);
+	commit("CLEAR_CONFIG");
+}
+
 export function LOGOUT({ commit, state }, callback) {
 	return new Promise((resolve, reject) => {
-		AsyncStorage.removeItem("email").then(() => {
+		AsyncStorage.removeItem("token").then(() => {
 			callback();
 			resolve();
 		});
