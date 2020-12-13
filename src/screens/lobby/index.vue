@@ -39,6 +39,7 @@ export default {
 			console.log(store.state.lobby);
 			return store.state.lobby;
 		},
+		currentItem: () => store.state.lastGameConfig.lastItemId,
 	},
 	data() {
 		return {};
@@ -48,6 +49,14 @@ export default {
 		exitRoom() {
 			store.dispatch("END_GAME");
 			this.navigation.navigate("Home");
+		},
+	},
+	watch: {
+		currentItem(newVal) {
+			if (newVal !== null) {
+				console.log("triggered");
+				this.navigation.navigate("Room");
+			}
 		},
 	},
 };

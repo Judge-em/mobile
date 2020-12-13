@@ -49,6 +49,7 @@ export async function START_CONNECTION({ commit, state }) {
 		.build();
 
 	connection.on("RefreshCurrentItemId", (itemId) => {
+		console.log(itemId);
 		commit("SET_CURRENT_ITEM", itemId);
 	});
 	connection.on("RefreshItemList", (items) => {
@@ -105,8 +106,15 @@ export async function START_CONNECTION({ commit, state }) {
 	connection.onclose(() => start());
 }
 
-export function JOIN_TO_ROOM({ commit, state }, { code, nickname }) {
-	state.connection.invoke("ConnectToGame", code.toUpperCase(), nickname);
+export function JOIN_TO_ROOM({ commit, state }, room) {
+	state.connection.invoke(
+		"ConnectToGame",
+		room.code.toUpperCase(),
+		room.nickname,
+	);
+}
+export function SET_VOTING_PROGRESS({ commit }, progress) {
+	commit("SET_VOTING_PROGRESS", progress);
 }
 
 export function END_GAME({ state, commit }) {
