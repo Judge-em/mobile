@@ -2,34 +2,89 @@
 	<nb-container>
 		<status-bar :barStyle="'light-content'"></status-bar>
 		<image-background :source="launchScreenBg" class="imageContainer">
-			<nb-card class="mb-15">
-				<nb-card-item bordered>
-					<nb-left>
-						<nb-body>
-							<nb-text>LOG IN TO JUDGE'EM</nb-text>
-						</nb-body>
-					</nb-left>
-				</nb-card-item>
-
-				<nb-card-item>
-					<nb-body>
+			<nb-grid>
+				<nb-row
+					:size="2"
+					:style="{
+						justifyContent: 'center',
+						alignItems: 'flex-end',
+					}"
+					><nb-h2
+						class="white"
+						:style="{ color: 'white', fontWeight: 'bold' }"
+						>LOGIN AS</nb-h2
+					></nb-row
+				>
+				<nb-row :size="3" :style="{ display: 'flex' }">
+					<nb-col
+						:style="{
+							display: 'flex',
+							flexDirection: 'row',
+							justifyContent: 'space-around',
+							alignItems: 'space-around',
+						}"
+					>
 						<nb-button
 							:onPress="loginAsGuest"
-							block
-							:style="{ margin: 15, marginTop: 10 }"
+							rounded
+							large
+							:style="{
+								margin: 15,
+								backgroundColor: 'rgba(255,255,255,0.8)',
+								marginTop: 10,
+								height: 150,
+								width: 150,
+								borderRadius: 300,
+
+								justifyContent: 'center',
+							}"
 						>
-							<nb-text>Log in as Guest</nb-text>
+							<nb-text
+								class="bold"
+								:style="{
+									color: '#371c7a',
+								}"
+								>Guest</nb-text
+							>
 						</nb-button>
-					</nb-body>
-				</nb-card-item>
-			</nb-card>
+					</nb-col>
+				</nb-row>
+				<nb-row :size="2" :style="{ display: 'flex' }">
+					<nb-col
+						:style="{
+							flexDirection: 'row',
+							justifyContent: 'space-around',
+						}"
+						><nb-grid>
+							<nb-row
+								:style="{
+									justifyContent: 'center',
+									marginBottom: -100,
+								}"
+							>
+								<nb-h1
+									class="white bold"
+									:style="{
+										paddingTop: 20,
+										fontSize: 40,
+									}"
+									>JUDGE'EM</nb-h1
+								>
+							</nb-row>
+							<nb-row :style="{ justifyContent: 'center' }">
+								<nb-text class="white"
+									>judge things with your friends</nb-text
+								>
+							</nb-row>
+						</nb-grid>
+					</nb-col>
+				</nb-row>
+			</nb-grid>
 		</image-background>
 	</nb-container>
 </template>
 
 <script>
-import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
-import { Dimensions, Platform } from "react-native";
 import launchScreenBg from "../../../assets/launchscreen-bg.png";
 import store from "../../store";
 
@@ -44,7 +99,6 @@ export default {
 			launchScreenBg,
 		};
 	},
-	mounted() {},
 	computed: {
 		token() {
 			return store.state.token;
@@ -69,29 +123,10 @@ export default {
 	flex: 1;
 	justify-content: center;
 }
-.text-color-primary {
-	color: blue;
-	font-family: Roboto;
-}
-.logoContainer {
-	flex: 1;
-	margin-bottom: 30;
-}
-.logo {
-	position: absolute;
-	width: 280;
-	height: 100;
-}
-.text-container {
-	align-items: center;
-	margin-bottom: 50;
-	background-color: transparent;
-}
-.text-color-white {
+.white {
 	color: white;
 }
-.button-container {
-	background-color: #6faf98;
-	align-self: center;
+.bold {
+	font-weight: bold;
 }
 </style>

@@ -1,56 +1,100 @@
 <template>
 	<nb-container>
-		<status-bar :barStyle="'light-content'"></status-bar>
-		<image-background :source="launchScreenBg" class="imageContainer">
-			<nb-container v-if="loaded" :style="{ backgroundColor: '#fff' }">
-				<nb-header>
-					<nb-body>
-						<nb-title> JOIN TO ROOM </nb-title>
-					</nb-body>
-				</nb-header>
-				<nb-content padder>
-					<nb-form>
-						<nb-item :error="!valid">
-							<nb-input
-								placeholder="Code"
-								v-model="code"
-								auto-capitalize="none"
-							/>
-						</nb-item>
-						<nb-item :error="!valid">
-							<nb-input
-								placeholder="Nickname"
-								v-model="nickname"
-								auto-capitalize="none"
-							/>
-						</nb-item>
-					</nb-form>
-					<view :style="{ marginTop: 10 }">
-						<nb-button block :on-press="join">
-							<nb-text>Join </nb-text>
-						</nb-button>
-					</view>
-				</nb-content>
+		<nb-container :style="{ backgroundColor: '#fff' }">
+			<nb-header>
+				<nb-body>
+					<nb-title> JOIN TO ROOM </nb-title>
+				</nb-body>
+			</nb-header>
+			<nb-container>
+				<nb-grid>
+					<nb-row></nb-row>
+					<nb-row
+						:size="1"
+						:style="{
+							justifyContent: 'center',
+							alignItems: 'flex-end',
+						}"
+						><nb-col>
+							<nb-row
+								:style="{
+									justifyContent: 'center',
+									alignItems: 'flex-end',
+								}"
+							>
+								<nb-h3>Type code to room and</nb-h3>
+							</nb-row>
+							<nb-row
+								:style="{
+									justifyContent: 'center',
+									alignItems: 'flex-start',
+								}"
+							>
+								<nb-h2 :style="{ fontWeight: 'bold' }"
+									>JOIN TO YOUR FRIENDS</nb-h2
+								>
+							</nb-row>
+						</nb-col>
+					</nb-row>
+					<nb-row :size="1">
+						<nb-col
+							><nb-form
+								:style="{ paddingLeft: 30, paddingRight: 30 }"
+							>
+								<nb-item
+									:error="!valid"
+									rounded
+									:style="{ marginBottom: 10 }"
+								>
+									<nb-icon name="key" />
+									<nb-input
+										placeholder="Code"
+										v-model="code"
+										auto-capitalize="none"
+									/>
+								</nb-item>
+								<nb-item :error="!valid" rounded>
+									<nb-icon name="star" />
+									<nb-input
+										placeholder="Nickname"
+										v-model="nickname"
+										auto-capitalize="none"
+									/>
+								</nb-item> </nb-form
+						></nb-col>
+					</nb-row>
+					<nb-row :size="1">
+						<nb-col :style="{ alignItems: 'flex-start' }">
+							<nb-button
+								block
+								:on-press="join"
+								rounded
+								:style="{
+									marginLeft: 30,
+									marginRight: 30,
+									marginTop: 30,
+								}"
+							>
+								<nb-text>Join </nb-text>
+							</nb-button>
+						</nb-col>
+					</nb-row>
+					<nb-row></nb-row>
+				</nb-grid>
 			</nb-container>
-			<nb-spinner v-if="!loaded"></nb-spinner>
-		</image-background>
+		</nb-container>
 	</nb-container>
 </template>
 
 <script>
-import { Dimensions, Platform } from "react-native";
-import launchScreenBg from "../../../assets/launchscreen-bg.png";
 import { Toast } from "native-base";
 import store from "../../store";
-import launchscreenLogo from "../../../assets/logo-kitchen-sink.png";
 
 export default {
 	props: {
 		navigation: {
 			type: Object,
 		},
-
-		loaded: false,
 	},
 	computed: {
 		logging_in() {
@@ -59,17 +103,6 @@ export default {
 	},
 	data() {
 		return {
-			launchScreenBg,
-			launchscreenLogo,
-			stylesObj: {
-				logoContainerStyle: {
-					marginTop: Dimensions.get("window").height / 8,
-				},
-				btnContainer: {
-					backgroundColor: "#6faf98",
-					alignSelf: "center",
-				},
-			},
 			nickname: "",
 			code: "",
 			valid: true,
@@ -77,10 +110,6 @@ export default {
 	},
 	created() {
 		store.dispatch("START_CONNECTION");
-	},
-	mounted() {
-		this.valid = true;
-		this.loaded = true;
 	},
 	methods: {
 		join() {

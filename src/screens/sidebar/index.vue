@@ -6,11 +6,9 @@
 				class="drawer-cover"
 				:style="stylesObj.drawerCoverObj"
 			/>
-			<image
-				:source="drawerImage"
-				class="drawer-image"
-				:style="stylesObj.drawerImageObj"
-			/>
+			<nb-h2 class="drawer-image" :style="stylesObj.drawerImageObj"
+				>JUDGE'EM</nb-h2
+			>
 			<nb-list>
 				<nb-list-item
 					v-for="data in datas"
@@ -43,6 +41,17 @@
 						</nb-badge>
 					</nb-right>
 				</nb-list-item>
+
+				<nb-list-item button noBorder :onPress="() => logout()">
+					<nb-left>
+						<nb-icon
+							active
+							name="key"
+							:style="{ color: '#777', fontSize: 26, width: 30 }"
+						/>
+						<nb-text> Logout </nb-text>
+					</nb-left>
+				</nb-list-item>
 			</nb-list>
 		</nb-content>
 	</nb-container>
@@ -52,6 +61,7 @@
 import { Dimensions, Platform } from "react-native";
 import drawerCover from "../../../assets/drawer-cover.png";
 import drawerImage from "../../../assets/logo-kitchen-sink.png";
+import store from "../../store";
 
 const deviceHeight = Dimensions.get("window").height;
 const deviceWidth = Dimensions.get("window").width;
@@ -78,7 +88,6 @@ export default {
 						Platform.OS === "android"
 							? deviceHeight / 13
 							: deviceHeight / 12,
-					resizeMode: "cover",
 				},
 				badgeText: {
 					fontSize: Platform.OS === "android" ? 11 : 13,
@@ -264,6 +273,10 @@ export default {
 		handleListItemClick(dataObj) {
 			this.navigation.navigate(dataObj.route);
 		},
+		logout() {
+			store.dispatch("DESTROY_SESSION");
+			this.navigation.navigate("Login");
+		},
 	},
 };
 </script>
@@ -282,6 +295,7 @@ export default {
 .drawer-image {
 	align-self: center;
 	position: absolute;
+	color: white;
 	height: 75;
 	width: 210;
 }

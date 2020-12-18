@@ -1,50 +1,54 @@
 <template>
-	<nb-container>
-		<status-bar :barStyle="'light-content'"></status-bar>
-		<nb-container :style="{ backgroundColor: '#fff' }">
-			<nb-header>
-				<nb-body>
-					<nb-title> {{ item.name }} </nb-title>
-				</nb-body>
-			</nb-header>
-			<nb-content padder>
-				<nb-grid>
-					<nb-row>
-						<nb-text>{{ item.description }}</nb-text></nb-row
-					>
-					<nb-row
-						v-for="(category, index) in categories"
-						:key="index"
-					>
-						<nb-grid>
-							<nb-row
-								><nb-text>{{ category.name }}</nb-text></nb-row
+	<nb-container :style="{ backgroundColor: '#fff' }">
+		<nb-header>
+			<nb-body>
+				<nb-title> {{ item.name }} </nb-title>
+			</nb-body>
+		</nb-header>
+		<nb-container>
+			<nb-grid
+				:style="{
+					paddingLeft: 30,
+					paddingRight: 30,
+					paddingBottom: 20,
+				}"
+			>
+				<nb-row></nb-row>
+				<nb-row :size="1">
+					<nb-text>{{ item.description }}</nb-text></nb-row
+				>
+				<nb-row
+					:size="2"
+					v-for="(category, index) in categories"
+					:key="index"
+				>
+					<nb-grid>
+						<nb-row :style="{ alignItems: 'flex-end' }"
+							><nb-text>{{ category.name }}</nb-text></nb-row
+						>
+						<nb-row>
+							<nb-button
+								transparent
+								v-for="star in 5"
+								:key="star"
+								:onPress="() => setRating(star, index)"
 							>
-							<nb-row>
-								<nb-button
-									transparent
-									v-for="star in 5"
-									:key="star"
-									:onPress="() => setRating(star, index)"
-								>
-									<nb-icon
-										:type="isReached(star, index)"
-										name="star"
-									/>
-								</nb-button>
-							</nb-row>
-						</nb-grid>
-					</nb-row>
-				</nb-grid>
-				<view :style="{ marginTop: 10 }">
-					<nb-text v-if="votingProgress.progress">{{
-						`Voted:${votingProgress.progress}/${votingProgress.max} `
-					}}</nb-text>
-					<nb-button block :onPress="vote">
-						<nb-text>Vote </nb-text>
-					</nb-button>
-				</view>
-			</nb-content>
+								<nb-icon
+									:type="isReached(star, index)"
+									name="star"
+								/>
+							</nb-button>
+						</nb-row>
+					</nb-grid>
+				</nb-row>
+
+				<nb-text v-if="votingProgress.progress">{{
+					`Voted:${votingProgress.progress}/${votingProgress.max} `
+				}}</nb-text>
+				<nb-button block :onPress="vote">
+					<nb-text>Vote </nb-text>
+				</nb-button>
+			</nb-grid>
 		</nb-container>
 	</nb-container>
 </template>

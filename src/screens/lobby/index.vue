@@ -1,25 +1,33 @@
 <template>
-	<nb-container>
-		<status-bar :barStyle="'light-content'"></status-bar>
-		<nb-container :style="{ backgroundColor: '#fff' }">
-			<nb-header>
-				<nb-body>
-					<nb-title> WELCOME IN LOBBY </nb-title>
-				</nb-body>
-			</nb-header>
-			<nb-content padder>
-				<nb-form>
-					<nb-item v-for="(user, index) in users" :key="index">
-						<nb-text>{{ user }}</nb-text>
-					</nb-item>
-				</nb-form>
-				<view :style="{ marginTop: 10 }">
-					<nb-button block :onPress="exitRoom">
-						<nb-text>Exit Room </nb-text>
-					</nb-button>
-				</view>
-			</nb-content>
-		</nb-container>
+	<nb-container :style="{ backgroundColor: '#fff' }">
+		<nb-header>
+			<nb-body>
+				<nb-title> WELCOME IN LOBBY {{ code.toUpperCase() }}</nb-title>
+			</nb-body>
+		</nb-header>
+		<nb-content padder>
+			<nb-text :style="{ fontSize: 18, fontWeight: 'bold' }"
+				>Waiting for the master to start the game</nb-text
+			>
+			<nb-list :style="{ marginTop: 20 }">
+				<nb-list-item
+					v-for="(user, index) in users"
+					:key="index"
+					:style="{ height: 40 }"
+				>
+					<nb-text
+						:style="{
+							marginLeft: -40,
+						}"
+					>
+						{{ user }}
+					</nb-text>
+				</nb-list-item>
+			</nb-list>
+			<nb-button block :onPress="exitRoom">
+				<nb-text>Exit Room </nb-text>
+			</nb-button>
+		</nb-content>
 	</nb-container>
 </template>
 
@@ -39,11 +47,9 @@ export default {
 			return store.state.lobby;
 		},
 		currentItem: () => store.state.lastGameConfig.lastItemId,
+		code: () => store.state.lastGameConfig.code,
 	},
-	data() {
-		return {};
-	},
-	mounted() {},
+
 	methods: {
 		exitRoom() {
 			store.dispatch("END_GAME");
@@ -60,35 +66,4 @@ export default {
 };
 </script>
 
-<style>
-.imageContainer {
-	display: flex;
-	flex: 1;
-	justify-content: center;
-}
-.text-color-primary {
-	color: blue;
-	font-family: Roboto;
-}
-.logoContainer {
-	flex: 1;
-	margin-bottom: 30;
-}
-.logo {
-	position: absolute;
-	width: 280;
-	height: 100;
-}
-.text-container {
-	align-items: center;
-	margin-bottom: 50;
-	background-color: transparent;
-}
-.text-color-white {
-	color: white;
-}
-.button-container {
-	background-color: #6faf98;
-	align-self: center;
-}
-</style>
+<style></style>
