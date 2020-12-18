@@ -14,6 +14,7 @@ import {
 import { Root } from "native-base";
 import HomeScreen from "./screens/home/index.vue";
 import LoginScreen from "./screens/login/index.vue";
+import RankingScreen from "./screens/ranking/index.vue";
 import LobbyScreen from "./screens/lobby/index.vue";
 import RoomScreen from "./screens/room/index.vue";
 
@@ -154,6 +155,7 @@ const Drawer = createDrawerNavigator(
 		Home: { screen: HomeScreen },
 		Anatomy: { screen: AnatomyScreen },
 		Login: { screen: LoginScreen },
+		Ranking: { screen: RankingScreen },
 		Lobby: { screen: LobbyScreen },
 		Room: { screen: RoomScreen },
 		Actionsheet: { screen: ActionSheetScreen },

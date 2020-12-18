@@ -4,13 +4,35 @@
 		<nb-container :style="{ backgroundColor: '#fff' }">
 			<nb-header>
 				<nb-body>
-					<nb-title> WELCOME IN LOBBY </nb-title>
+					<nb-title> RANKING </nb-title>
 				</nb-body>
 			</nb-header>
 			<nb-content padder>
 				<nb-form>
-					<nb-item v-for="(user, index) in users" :key="index">
-						<nb-text>{{ user }}</nb-text>
+					<nb-item v-for="(item, index) in ranking" :key="index">
+						<nb-grid>
+							<nb-col
+								><nb-text>{{ item.name }}</nb-text></nb-col
+							>
+							<nb-col></nb-col>
+							<nb-col>
+								<nb-grid
+									><nb-col
+										><nb-text>{{
+											item.rating
+										}}</nb-text></nb-col
+									>
+									<nb-col
+										><nb-icon
+											v-if="index === 0"
+											type="FontAwesome"
+											name="trophy"
+											:style="{
+												color: '#999',
+											}" /></nb-col
+								></nb-grid>
+							</nb-col>
+						</nb-grid>
 					</nb-item>
 				</nb-form>
 				<view :style="{ marginTop: 10 }">
@@ -34,14 +56,35 @@ export default {
 			type: Object,
 		},
 	},
+	created() {
+		// this.ranking = [
+		// 	{
+		// 		name: "sdfgdfg",
+		// 		rating: 2,
+		// 	},
+		// ];
+		this.parsedData = JSON.parse(this.summary);
+		this.parsedData.Items.forEach((item) => {
+			let totalScore = 0;
+			item.Ratings.forEach((rating) => {
+				totalScore += rating.TotalScore;
+			});
+			this.ranking.push({
+				rating: totalScore / item.Ratings.length,
+				name: item.Name,
+			});
+		});
+
+		this.ranking.sort((a, b) => b.rating - a.rating);
+	},
 	computed: {
-		users() {
-			return store.state.lobby;
-		},
-		currentItem: () => store.state.lastGameConfig.lastItemId,
+		summary: () => store.state.summary.result,
 	},
 	data() {
-		return {};
+		return {
+			parsedData: {},
+			ranking: [],
+		};
 	},
 	mounted() {},
 	methods: {

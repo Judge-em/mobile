@@ -20,6 +20,5 @@ export async function send(method, path, data, params) {
 		data,
 		params,
 	});
-	console.log(response.data);
 	return response.data;
 }

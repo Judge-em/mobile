@@ -85,7 +85,6 @@ export default {
 	methods: {
 		join() {
 			// this.valid = true;
-			console.log(this.valid);
 			if (this.code && this.nickname) {
 				store.dispatch("JOIN_TO_ROOM", {
 					code: this.code,

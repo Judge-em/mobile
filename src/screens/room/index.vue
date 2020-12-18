@@ -67,6 +67,7 @@ export default {
 		lastGameConfig: () => store.state.lastGameConfig,
 		votingProgress: () => store.state.votingProgress,
 		connection: () => store.state.connection,
+		summary: () => store.state.summary,
 	},
 	data() {
 		return {
@@ -93,18 +94,15 @@ export default {
 	},
 	methods: {
 		setRating(rate, index) {
-			console.log(rate, index);
 			this.rating.categoryRatings[index].score = rate;
 		},
 		vote() {
-			console.log("ttt");
 			if (!this.loading) {
 				this.loading = true;
 				let valid = true;
 				for (const rating of this.rating.categoryRatings) {
 					if (rating.score === 0) valid = false;
 				}
-				console.log({ valid });
 				if (valid) {
 					this.connection.invoke(
 						"AddRating",
@@ -124,7 +122,6 @@ export default {
 			}
 		},
 		isReached(star, index) {
-			console.log(index);
 			if (this.rating.categoryRatings[index])
 				return this.rating.categoryRatings[index].score < star
 					? "Feather"
@@ -149,6 +146,11 @@ export default {
 					(category) => (category.score = 0),
 				);
 			},
+		},
+		summary(newVal) {
+			if (newVal !== null) {
+				this.navigation.navigate("Ranking");
+			}
 		},
 	},
 	destroyed() {

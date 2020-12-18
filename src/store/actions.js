@@ -40,7 +40,6 @@ export async function LOGIN({ commit, dispatch }) {
 }
 
 export async function START_CONNECTION({ commit, state }) {
-	console.log(state.token);
 	const connection = new HubConnectionBuilder()
 		.withUrl(`https://judge-em-api.herokuapp.com/hubs/game`, {
 			accessTokenFactory: () => state.token,
@@ -49,7 +48,6 @@ export async function START_CONNECTION({ commit, state }) {
 		.build();
 
 	connection.on("RefreshCurrentItemId", (itemId) => {
-		console.log(itemId);
 		commit("SET_CURRENT_ITEM", itemId);
 	});
 	connection.on("RefreshItemList", (items) => {
@@ -64,7 +62,6 @@ export async function START_CONNECTION({ commit, state }) {
 			type: messageType[type],
 			duration: 3000,
 		});
-		console.log({ content, type });
 	});
 
 	connection.on("ShowSummary", (summary) => {
@@ -83,10 +80,6 @@ export async function START_CONNECTION({ commit, state }) {
 
 	connection.on("AllowGameControl", (masterId) => {
 		commit("SET_GAME_MASTER", masterId);
-	});
-
-	connection.on("RequestCurrentItemId", (gameCode) => {
-		console.log("notImplemented");
 	});
 
 	commit("SET_CONNECTION", connection);
@@ -118,7 +111,6 @@ export function SET_VOTING_PROGRESS({ commit }, progress) {
 }
 
 export function END_GAME({ state, commit }) {
-	console.log("22222", state.lastGameConfig);
 	state.connection.invoke("DisconnectFromGame", state.lastGameConfig.code);
 	commit("CLEAR_CONFIG");
 }

@@ -52,7 +52,6 @@ export default {
 	},
 	watch: {
 		token(newVal) {
-			console.log({ newVal });
 			if (newVal !== null) this.navigation.navigate("Home");
 		},
 	},
