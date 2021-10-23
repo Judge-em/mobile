@@ -5,10 +5,13 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "pre-commit": "pretty-quick --staged"
   },
   "dependencies": {
     "@microsoft/signalr": "^5.0.0",
+    "@commitlint/cli": "^12.1.1",
+    "@commitlint/config-conventional": "^12.1.1",
     "axios": "^0.21.0",
     "expo": "~39.0.2",
     "expo-status-bar": "~1.0.2",
@@ -24,6 +27,8 @@
     "vue-native-core": "^0.1.4",
     "vue-native-helper": "^0.1.4",
     "vue-native-router": "^0.2.0",
+    "prettier": "^2.2.1",
+    "pretty-quick": "^3.1.0",
     "vuelidate": "^0.7.6",
     "vuex": "^3.6.0"
   },
